@@ -21,7 +21,7 @@
 
         <h3>Upload PowerPoint Files:</h3>
 
-        <button type="button" id="add-field">Add More Fields</button>
+        <button type="button" id="add-field">Add More files</button>
         <br><br>
         <br>
         <!-- Input fields for merging order and slide numbers for each file -->
@@ -89,14 +89,15 @@
                     if (value in mergeOrderValues) {
                         // Duplicate value found
                         hasDuplicates = true;
+                        $(this).css('color','red');
                         return false; // Exit the loop
                     }
-
+                        $(this).css('color','black');
                     mergeOrderValues[value] = true;
                 });
 
                 if (hasDuplicates) {
-                    alert('Duplicate merge_order values found.');
+                    // alert('Duplicate merge_order values found.');
                 } else {
                     console.log('No duplicate merge_order values found.');
                 }
