@@ -69,7 +69,7 @@
                 $('.form-container').append(clonedField);
             });
             // Attach keyup event handler to the initial merge_order input fields
-           $('.form-container').on('keyup', '.merge-order-input', checkForDuplicates);
+           $('.form-container').on('blur', '.merge-order-input', checkForDuplicates);
 
 
             // Function to check for duplicate merge_order values
@@ -78,15 +78,20 @@
                 var hasDuplicates = false;
 
                 // Iterate through each merge_order input
-                $('.merge-order-input').each(function () {
-                    var value = $(this).val();
+                $('.file-details .merge-order-input').each(function () {
+                    var value = $(this).val().trim(); // Trim whitespace
+
+                    if (value === '' || value === null) {
+                        // Skip empty or null values
+                        return true; // Continue to the next iteration
+                    }
 
                     if (value in mergeOrderValues) {
                         // Duplicate value found
                         hasDuplicates = true;
                         return false; // Exit the loop
                     }
-                    console.log(value);
+
                     mergeOrderValues[value] = true;
                 });
 
