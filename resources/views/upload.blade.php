@@ -32,7 +32,7 @@
                 <input type="file" name="pptx_files[]">
 
                 <label for="merge_order">Merging Order:</label>
-                <input type="text" name="merge_order[]">
+                <input type="text" class="merge-order-input" name="merge_order[]">
 
                 <label for="slide_numbers">Slide Numbers:</label>
                 <input type="text" name="slide_numbers[]">
@@ -48,7 +48,7 @@
                 <input type="file" name="pptx_files[]">
                 
                 <label for="merge_order">Merging Order:</label>
-                <input type="text" name="merge_order[]">
+                <input type="text" class="merge-order-input" name="merge_order[]">
                 
                 <label for="slide_numbers">Slide Numbers:</label>
                 <input type="text" name="slide_numbers[]">
@@ -68,6 +68,35 @@
                 clonedField.css('display', 'block'); // Show the cloned fields
                 $('.form-container').append(clonedField);
             });
+            // Attach keyup event handler to the initial merge_order input fields
+           $('.form-container').on('keyup', '.merge-order-input', checkForDuplicates);
+
+
+            // Function to check for duplicate merge_order values
+            function checkForDuplicates() {
+                var mergeOrderValues = {};
+                var hasDuplicates = false;
+
+                // Iterate through each merge_order input
+                $('.merge-order-input').each(function () {
+                    var value = $(this).val();
+
+                    if (value in mergeOrderValues) {
+                        // Duplicate value found
+                        hasDuplicates = true;
+                        return false; // Exit the loop
+                    }
+                    console.log(value);
+                    mergeOrderValues[value] = true;
+                });
+
+                if (hasDuplicates) {
+                    alert('Duplicate merge_order values found.');
+                } else {
+                    console.log('No duplicate merge_order values found.');
+                }
+            }
+
             $('#getSlideCount').click(function () {
                 var pptxFile = $('#pptxFile')[0].files[0];
 
