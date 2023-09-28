@@ -27,33 +27,29 @@ class PdfMergeController extends Controller
         $pdf = new PDFMerger(app('files'));
 
         // Define the custom order of files and slides
-        // dd($request->all());
         $customOrder = [];
         foreach ($request->file('pdf_file') as $key => $file) {
-            $customOrder[$request->merge_order[$key]-1]=[
-                'pdf_file' => $key,  // Index of the first uploaded file
-                'slide_numbers' => explode(',', $request->slide_numbers[$key]),  // Slide numbers from the first file
+            $customOrder[$request->merge_order[$key] - 1] = [
+                'pdf_file' => $key, // Index of the first uploaded file
+                'slide_numbers' => explode(',', $request->slide_numbers[$key]), // Slide numbers from the first file
             ];
         }
         // Re-arrange the array indices numerically
         ksort($customOrder);
-        // dd($customOrder);
         foreach ($customOrder as $order) {
             $fileIndex = $order['pdf_file'];
-            $slideNumbers = isset($order['slide_numbers'])?$order['slide_numbers']:['all'];
-            
+            $slideNumbers = isset($order['slide_numbers']) ? $order['slide_numbers'] : ['all'];
+
             if (isset($pdf_file[$fileIndex])) {
                 $pdfFile = $pdf_file[$fileIndex];
                 $pdf_path = $pdfFile->getRealPath();
-                // dd($pdf->getSlides()[1]);
                 // foreach ($slideNumbers as $slideNumber) {
-                    $slide = $pdf_path;
-                    if ($slideNumbers[0]=='all' || $slideNumbers[0]=='') {
-                        // dd($slideNumbers);
-                        $pdf->addPDF($slide , 'all');
-                    }else{
-                        $pdf->addPDF($slide , $slideNumbers);
-                    }
+                $slide = $pdf_path;
+                if ($slideNumbers[0] == 'all' || $slideNumbers[0] == '') {
+                    $pdf->addPDF($slide, 'all');
+                } else {
+                    $pdf->addPDF($slide, $slideNumbers);
+                }
                 // }
             }
         }
@@ -70,7 +66,9 @@ class PdfMergeController extends Controller
         $pdf->save($outputPath);
 
         // Optionally, you can return a response or a download link
-        return response()->download($outputPath)->deleteFileAfterSend(true);
+        return response()
+            ->download($outputPath)
+            ->deleteFileAfterSend(true);
     }
 
     public function mergePdf_old_working()
@@ -101,6 +99,8 @@ class PdfMergeController extends Controller
         $pdf->save($outputPath);
 
         // Optionally, you can return a response or a download link
-        return response()->download($outputPath)->deleteFileAfterSend(true);
+        return response()
+            ->download($outputPath)
+            ->deleteFileAfterSend(true);
     }
 }
