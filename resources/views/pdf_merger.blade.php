@@ -1,12 +1,18 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Upload and Merge PowerPoint Files</title>
-    <script
-  src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
-  integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8="
-  crossorigin="anonymous"></script>
+    <title>Upload and Merge PDF Files</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
+        integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
 </head>
+
 <body>
     <h2>Upload and Merge PDF Files</h2>
 
@@ -16,124 +22,132 @@
         </div>
     @endif
 
-    <form action="/merge-pdf" method="POST" enctype="multipart/form-data">
+    <form action="/merge-pdf" id="merge-pdf-form" method="POST" enctype="multipart/form-data">
         @csrf
 
         <h3>Upload PDF Files:</h3>
 
-        <button type="button" id="add-field">Add More files</button>
+        <button type="button" id="add-field">Add More Files</button>
         <br><br>
         <br>
         <!-- Input fields for merging order and slide numbers for each file -->
         <div class="form-container">
-        <!-- Initial set of form fields -->
+            <!-- Initial set of form fields -->
             <div class="file-details">
-                <label for="merge_order">File Name:</label>
-                <input type="file" name="pdf_file[]">
+                <label for="pdf_file_0">File Name:</label>
+                <input type="file" name="pdf_file[]" id="pdf_file_0" class="pdf-file" accept=".pdf" required>
 
-                <label for="merge_order">Merging Order:</label>
-                <input type="text" class="merge-order-input" name="merge_order[]">
+                <label for="merge_order_0">Merging Order:</label>
+                <input type="text" class="merge-order-input" name="merge_order[]" id="merge_order_0" required>
 
-                <label for="slide_numbers">Slide Numbers:</label>
-                <input type="text" name="slide_numbers[]">
+                <label for="slide_numbers_0">Slide Numbers:</label>
+                <input type="text" class="slide-numbers-input" name="slide_numbers[]" id="slide_numbers_0" required>
             </div>
-            
         </div>
         <br><br>
         <div id="slideCountResult"></div>
         <div class="file-details-template" style="display: none;">
             <br>
             <div class="file-details">
-                <label for="merge_order">File Name:</label>
-                <input type="file" name="pdf_file[]">
-                
-                <label for="merge_order">Merging Order:</label>
-                <input type="text" class="merge-order-input" name="merge_order[]">
-                
-                <label for="slide_numbers">Slide Numbers:</label>
-                <input type="text" name="slide_numbers[]">
+                <label for="pdf_file_0">File Name:</label>
+                <input type="file" name="pdf_file[]" class="pdf-file" accept=".pdf" required>
+
+                <label for="merge_order_0">Merging Order:</label>
+                <input type="text" class="merge-order-input" name="merge_order[]" required>
+
+                <label for="slide_numbers_0">Slide Numbers:</label>
+                <input type="text" class="slide-numbers-input" name="slide_numbers[]" required>
             </div>
         </div>
-        
+
         <button type="submit">Upload and Merge</button>
     </form>
+
     <script>
-        $(document).ready(function () {
-            // Clone the template and append it when the "Add More Fields" button is clicked
-            $('#add-field').click(function () {
-                // alert('Add More Fields');
+        $(document).ready(function() {
+            // Clone the template and append it when the "Add More Files" button is clicked
+            $('#add-field').click(function() {
                 var clonedField = $('.file-details-template').clone();
                 clonedField.removeClass('file-details-template');
                 clonedField.addClass('file-details');
-                clonedField.css('display', 'block'); // Show the cloned fields
+                clonedField.css('display', 'block');
                 $('.form-container').append(clonedField);
-            });
-            // Attach keyup event handler to the initial merge_order input fields
-           $('.form-container').on('blur', '.merge-order-input', checkForDuplicates);
 
+                // Increment the index and update IDs and names for the new elements
+                var newIndex = $('.file-details').length - 1;
+                clonedField.find('.pdf-file').attr('id', 'pdf_file_' + newIndex).attr('name', 'pdf_file[' +
+                    newIndex + ']');
+                clonedField.find('.merge-order-input').attr('id', 'merge_order_' + newIndex).attr('name',
+                    'merge_order[' + newIndex + ']');
+                clonedField.find('.slide-numbers-input').attr('id', 'slide_numbers_' + newIndex).attr(
+                    'name', 'slide_numbers[' + newIndex + ']');
+            });
+
+            // Attach keyup event handler to the initial merge_order input fields
+            $('.form-container').on('blur', '.merge-order-input', checkForDuplicates);
 
             // Function to check for duplicate merge_order values
             function checkForDuplicates() {
                 var mergeOrderValues = {};
                 var hasDuplicates = false;
 
-                // Iterate through each merge_order input
-                $('.file-details .merge-order-input').each(function () {
-                    var value = $(this).val().trim(); // Trim whitespace
+                $('.file-details .merge-order-input').each(function() {
+                    var value = $(this).val().trim();
 
                     if (value === '' || value === null) {
-                        // Skip empty or null values
-                        return true; // Continue to the next iteration
+                        return true;
                     }
 
                     if (value in mergeOrderValues) {
-                        // Duplicate value found
                         hasDuplicates = true;
-                        $(this).css('color','red');
-                        return false; // Exit the loop
+                        $(this).css('color', 'red');
+                        return false;
                     }
-                        $(this).css('color','black');
+                    $(this).css('color', 'black');
                     mergeOrderValues[value] = true;
                 });
 
                 if (hasDuplicates) {
-                    // alert('Duplicate merge_order values found.');
+                    // Handle duplicate values
                 } else {
-                    console.log('No duplicate merge_order values found.');
+                    // Handle non-duplicate values
                 }
             }
 
-            $('#getSlideCount').click(function () {
-                var pptxFile = $('#pptxFile')[0].files[0];
-
-                if (!pptxFile) {
-                    alert('Please select a PPTX file.');
-                    return;
-                }
-
-                var formData = new FormData();
-                formData.append('pptx_file', pptxFile);
-
-                $.ajax({
-                    url: 'get_slide_count.php',
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    dataType: 'json',
-                    success: function (response) {
-                        if (response.slideCount >= 0) {
-                            $('#slideCountResult').text('Slide Count: ' + response.slideCount);
-                        } else {
-                            $('#slideCountResult').text('Error: Unable to retrieve slide count.');
-                        }
+            // Initialize the form validation
+            $("#merge-pdf-form").validate({
+                rules: {
+                    // Use class selector for dynamically generated fields
+                    "pdf_file[]": {
+                        required: true,
+                        accept: "application/pdf",
                     },
-                    error: function () {
-                        $('#slideCountResult').text('Error: Unable to connect to the server.');
-                    }
-                });
+                    "merge_order[]": {
+                        required: true,
+                        digits: true, // Assuming merge_order should be numeric
+                    },
+                    "slide_numbers[]": {
+                        required: true,
+                        digits: true, // Assuming slide_numbers should be numeric
+                    },
+                },
+                // messages: {
+                //     "pdf_file[]": {
+                //         required: "Please select a PDF file.",
+                //         accept: "Only PDF files are allowed.",
+                //     },
+                //     "merge_order[]": {
+                //         required: "Please enter a merging order.",
+                //         digits: "Merging order should be numeric.",
+                //     },
+                //     "slide_numbers[]": {
+                //         required: "Please enter slide numbers.",
+                //         digits: "Slide numbers should be numeric.",
+                //     },
+                // },
             });
         });
     </script>
 </body>
+
 </html>
