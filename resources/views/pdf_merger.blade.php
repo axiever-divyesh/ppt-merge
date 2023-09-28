@@ -39,10 +39,13 @@
                 <input type="file" name="pdf_file[0]" id="pdf_file_0" class="pdf-file" accept=".pdf" required>
 
                 <label for="merge_order_0">Merging Order:</label>
-                <input type="text" class="merge-order-input" name="merge_order[]" id="merge_order_0" required>
+                <input type="text" class="merge-order-input" name="merge_order[0]" id="merge_order_0" required>
 
                 <label for="slide_numbers_0">Slide Numbers:</label>
-                <input type="text" class="slide-numbers-input" name="slide_numbers[]" id="slide_numbers_0" required>
+                <input type="text" class="slide-numbers-input" name="slide_numbers[0]" id="slide_numbers_0" required>
+
+                <button type="button" id="remove-field">Remove</button>
+
             </div>
         </div>
         <br><br>
@@ -58,6 +61,8 @@
 
                 <label for="slide_numbers_0">Slide Numbers:</label>
                 <input type="text" class="slide-numbers-input" name="slide_numbers[]" required>
+                <button type="button" class="remove-field">Remove</button>
+
             </div>
         </div>
 
