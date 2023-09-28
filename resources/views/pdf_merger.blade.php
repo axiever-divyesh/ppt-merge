@@ -5,8 +5,7 @@
     <title>Upload and Merge PDF Files</title>
     <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
         integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 
     <style>
         .error {
@@ -37,7 +36,7 @@
             <!-- Initial set of form fields -->
             <div class="file-details">
                 <label for="pdf_file_0">File Name:</label>
-                <input type="file" name="pdf_file[]" id="pdf_file_0" class="pdf-file" accept=".pdf" required>
+                <input type="file" name="pdf_file[0]" id="pdf_file_0" class="pdf-file" accept=".pdf" required>
 
                 <label for="merge_order_0">Merging Order:</label>
                 <input type="text" class="merge-order-input" name="merge_order[]" id="merge_order_0" required>
@@ -51,7 +50,7 @@
         <div class="file-details-template" style="display: none;">
             <br>
             <div class="file-details">
-                <label for="">File Name:</label>
+                <label for="pdf_file_0">File Name:</label>
                 <input type="file" name="pdf_file[]" class="pdf-file" accept=".pdf" required>
 
                 <label for="merge_order_0">Merging Order:</label>
@@ -115,7 +114,7 @@
                     // Handle non-duplicate values
                 }
             }
-            
+
             // Initialize the form validation
             $("#merge-pdf-form").validate({
                 rules: {
@@ -126,13 +125,13 @@
                     },
                     "merge_order[]": {
                         required: true,
-                        unique: true,
                         digits: true, // Assuming merge_order should be numeric
                     },
                     "slide_numbers[]": {
                         required: true,
                     },
-                },
+                }
+                // ,
                 // messages: {
                 //     "pdf_file[]": {
                 //         required: "Please select a PDF file.",
