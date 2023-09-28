@@ -28,6 +28,7 @@ class PdfMergeController extends Controller
 
         // Define the custom order of files and slides
         $customOrder = [];
+        // dd($request->all()) ;
         foreach ($request->file('pdf_file') as $key => $file) {
             $customOrder[$request->merge_order[$key] - 1] = [
                 'pdf_file' => $key, // Index of the first uploaded file
@@ -36,6 +37,7 @@ class PdfMergeController extends Controller
         }
         // Re-arrange the array indices numerically
         ksort($customOrder);
+        // dd($customOrder);
         foreach ($customOrder as $order) {
             $fileIndex = $order['pdf_file'];
             $slideNumbers = isset($order['slide_numbers']) ? $order['slide_numbers'] : ['all'];
