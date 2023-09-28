@@ -97,17 +97,11 @@
                 $('.file-details .pdf-file').each(function(index, element) {
                     // alert(index);
                     $(this).attr('id', 'pdf-file_' + index).attr('name','pdf_file['+ index +']').attr('id', 'pdf_file_' + index);
-                    // $(this).closest(".error").attr("id", 'pdf_file_' + index+ '-error');
                     $(this).next("label").attr("id", 'pdf_file_' + index+ '-error').attr("for", 'pdf_file_' + index);
-                    // $('#pdf_file_' + index + '-error').attr('id', 'pdf_file_' + index+ '-error');
                 });
                 $('.file-details .slide-numbers-input').each(function(index, element) {
                     $(this).attr('id', 'slide_numbers_' + index).attr('name','slide_numbers['+ index +']').attr('id', 'slide_numbers_' + index);
                     $(this).next("label").attr("id", 'slide_numbers_' + index+ '-error').attr("for", 'slide_numbers_' + index);
-                    // $(this).next("label").attr("id", 'slide_numbers_' + index+ '-error');
-                    // $(this).closest(".error").attr("id", 'merge_order_' + index+ '-error');
-                    // $('#slide_numbers_' + index + '-error').attr('id', 'slide_numbers_' + index + '-error');
-                    // $('#merge_order_' + index + '-error').attr('id', 'merge_order_' + index + '-error');
                 });
                 $("#merge-pdf-form").validate();
             });
