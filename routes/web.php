@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\PresentationController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,6 +15,12 @@ use App\Http\Controllers\PresentationController;
 Route::get('/', function () {
     return view('welcome');
 });
+//ppt merger
 Route::get('/home', [PresentationController::class, 'index']);
 Route::post('/upload', [PresentationController::class, 'upload']);
 Route::get('/download', [PresentationController::class, 'download']);
+
+
+//pdf merger
+Route::any('/merge-pdf', 'PdfMergeController@mergePdf');
+Route::get('/pdf_merger', 'PdfMergeController@index');
